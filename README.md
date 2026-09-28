@@ -43,4 +43,4 @@ INSERT INTO repuesto(nombre, stock, precio) VALUES ('SSD 240 GB', 4, 30000.00);
 
 La compilación de `src/*.java` fue verificada con el compilador de Java 17. No se ejecutó una integración con MySQL en el entorno de elaboración: se debe probar localmente el flujo y los casos de error de la matriz del informe. La aplicación no autentica usuarios ni permite actualizar clientes, reutilizar un equipo ya registrado o programar un presupuesto con varios ítems. `clave_hash` queda solo como campo de esquema del TP1 y el usuario de demostración no habilita inicio de sesión.
 
-Este paquete debe incorporarse al repositorio del TP1 antes de entregar el enlace de GitHub como versión completa del AP2.
+La rama `ap2-seminario-2026` del repositorio del TP1 contiene esta ampliación. El enlace directo es `https://github.com/marcos350151/seminario-practica-ap1-servicio-tecnico/tree/ap2-seminario-2026`.
