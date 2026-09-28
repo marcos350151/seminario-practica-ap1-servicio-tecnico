@@ -41,6 +41,6 @@ INSERT INTO repuesto(nombre, stock, precio) VALUES ('SSD 240 GB', 4, 30000.00);
 
 ## Verificación y límites
 
-La compilación de `src/*.java` fue verificada con el compilador de Java 17. No se ejecutó una integración con MySQL en el entorno de elaboración: se debe probar localmente el flujo y los casos de error de la matriz del informe. La aplicación no autentica usuarios ni permite actualizar clientes, reutilizar un equipo ya registrado o programar un presupuesto con varios ítems. `clave_hash` queda solo como campo de esquema del TP1 y el usuario de demostración no habilita inicio de sesión.
+La compilación de `src/*.java` se verificó con `javac 25.0.4.1` y el prototipo se ejecutó con MySQL Connector/J contra MySQL 8.4.11 local. En la prueba documentada en el informe, la orden 1 terminó ENTREGADO y la orden 2 CANCELADO; también se observaron errores al ingresar un monto negativo y al pedir más repuestos que el stock disponible. La verificación exhaustiva de filas parciales, del stock final y las pruebas de aceptación con usuarios quedan pendientes. La aplicación no autentica usuarios ni permite actualizar clientes, reutilizar un equipo ya registrado o programar un presupuesto con varios ítems. `clave_hash` queda solo como campo de esquema del TP1 y el usuario de demostración no habilita inicio de sesión.
 
 La rama `ap2-seminario-2026` del repositorio del TP1 contiene esta ampliación. El enlace directo es `https://github.com/marcos350151/seminario-practica-ap1-servicio-tecnico/tree/ap2-seminario-2026`.
