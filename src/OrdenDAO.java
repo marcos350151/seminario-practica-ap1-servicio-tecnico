@@ -1,6 +1,39 @@
 import java.sql.*;
 
 public class OrdenDAO {
+    public int ingresar(int idCliente, String tipo, String marca, String modelo,
+                       String serie, String falla, String accesorios) throws SQLException {
+        if (tipo == null || tipo.isBlank() || falla == null || falla.isBlank())
+            throw new IllegalArgumentException("Tipo de equipo y falla son obligatorios.");
+        try (Connection cn = Database.connect()) {
+            cn.setAutoCommit(false);
+            try {
+                int equipo;
+                try (PreparedStatement ps = cn.prepareStatement(
+                        "INSERT INTO equipo(id_cliente,tipo,marca,modelo,nro_serie) VALUES (?,?,?,?,?)",
+                        Statement.RETURN_GENERATED_KEYS)) {
+                    ps.setInt(1, idCliente); ps.setString(2, tipo); ps.setString(3, marca);
+                    ps.setString(4, modelo); ps.setString(5, serie); ps.executeUpdate();
+                    try (ResultSet rs = ps.getGeneratedKeys()) {
+                        if (!rs.next()) throw new SQLException("No se creó equipo.");
+                        equipo = rs.getInt(1);
+                    }
+                }
+                int orden;
+                try (PreparedStatement ps = cn.prepareStatement(
+                        "INSERT INTO orden_servicio(id_equipo,falla_informada,accesorios) VALUES (?,?,?)",
+                        Statement.RETURN_GENERATED_KEYS)) {
+                    ps.setInt(1, equipo); ps.setString(2, falla); ps.setString(3, accesorios);
+                    ps.executeUpdate();
+                    try (ResultSet rs = ps.getGeneratedKeys()) {
+                        if (!rs.next()) throw new SQLException("No se creó orden.");
+                        orden = rs.getInt(1);
+                    }
+                }
+                cn.commit(); return orden;
+            } catch (SQLException | RuntimeException e) { cn.rollback(); throw e; }
+        }
+    }
     public int registrarEquipo(int idCliente, String tipo, String marca, String modelo, String serie) throws SQLException {
         String sql = "INSERT INTO equipo(id_cliente,tipo,marca,modelo,nro_serie) VALUES (?,?,?,?,?)";
         try (Connection cn = Database.connect();
@@ -30,16 +63,6 @@ public class OrdenDAO {
             }
         }
         throw new SQLException("No se pudo crear la orden.");
-    }
-
-    public void actualizarEstado(int idOrden, String estado) throws SQLException {
-        String sql = "UPDATE orden_servicio SET estado=?, fecha_cierre = CASE WHEN ?='ENTREGADO' THEN CURRENT_TIMESTAMP ELSE fecha_cierre END WHERE id_orden=?";
-        try (Connection cn = Database.connect(); PreparedStatement ps = cn.prepareStatement(sql)) {
-            ps.setString(1, estado);
-            ps.setString(2, estado);
-            ps.setInt(3, idOrden);
-            if (ps.executeUpdate() == 0) throw new SQLException("Orden inexistente.");
-        }
     }
 
     public void listarOrdenes() throws SQLException {
